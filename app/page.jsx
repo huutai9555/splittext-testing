@@ -14,29 +14,29 @@ export default function Page() {
   const [played, setPlayed] = React.useState(false);
   const [indexSrc, setIndexSrc] = React.useState(0);
 
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    console.log(audio.src)
-    const handleEnded = () => {
-      // Thay đổi source khi audio kết thúc
-      const audioList = ['lovep1.mp3', 'lovep2.mp3'];
-      const currentIndexSrc = indexSrc === audioList.length - 1 ? 0 : indexSrc + 1;
-      console.log(audio.src)
-      audio.src = audioList[currentIndexSrc]; // hoặc logic để chọn file khác
-      setIndexSrc(currentIndexSrc);
-      audio.load(); // Load audio mới
-      audio.play(); // Tự động phát (tuỳ chọn)
-    };
+  // useEffect(() => {
+  //   const audio = audioRef.current;
+  //   if (!audio) return;
+  //   console.log(audio.src)
+  //   const handleEnded = () => {
+  //     // Thay đổi source khi audio kết thúc
+  //     const audioList = ['lovep1.mp3', 'lovep2.mp3'];
+  //     const currentIndexSrc = indexSrc === audioList.length - 1 ? 0 : indexSrc + 1;
+  //     console.log(audio.src)
+  //     audio.src = audioList[currentIndexSrc]; // hoặc logic để chọn file khác
+  //     setIndexSrc(currentIndexSrc);
+  //     audio.load(); // Load audio mới
+  //     audio.play(); // Tự động phát (tuỳ chọn)
+  //   };
 
-    if (audio) {
-      audio.addEventListener("ended", handleEnded);
+  //   if (audio) {
+  //     audio.addEventListener("ended", handleEnded);
 
-      return () => {
-        audio.removeEventListener("ended", handleEnded);
-      };
-    }
-  }, [audioRef]);
+  //     return () => {
+  //       audio.removeEventListener("ended", handleEnded);
+  //     };
+  //   }
+  // }, [audioRef]);
   useEffect(() => {
     if (played) {
       const tl = gsap.timeline();
@@ -92,9 +92,6 @@ export default function Page() {
   return (
     <>
       <div className="hidden audio-box flex-col items-center justify-center h-screen relative bg-black">
-        <audio id="audio" ref={audioRef} controls className="hidden">
-          <source src={"./lovep1.mp3"} type="audio/mpeg" />
-        </audio>
         {!played && (
           <FaPlayCircle
             className={`absolute text-5xl cursor-pointer ${
@@ -129,7 +126,7 @@ export default function Page() {
       </div>
       <div className="text z-[3]">Người Nghiện Sống Tình Cảm Lắm Em À.</div>
 
-      <Scrolly />
+      <Scrolly  ref={audioRef} setIndexSrc={setIndexSrc} indexSrc={indexSrc}  />
     </>
   );
 }
