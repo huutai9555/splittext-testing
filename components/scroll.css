@@ -23,7 +23,7 @@ body {
   width: 100%;
 }
 
-.text {
+.scrollly-text {
   position: fixed;
   top: 50vh;
   font-family: termina, sans-serif;

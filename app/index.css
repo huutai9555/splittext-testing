@@ -1,0 +1,23 @@
+.text {
+  color: #dfdcff;
+  font-size: clamp(1rem, 10rem, 3vw);
+  line-height: 1.2;
+  box-sizing: border-box;
+  padding: 5%;
+  width: 100%;
+  text-align: center;
+  perspective: 500px;
+  position: fixed;
+  top: 50vh;
+  font-family: termina, sans-serif;
+  font-weight: 900;
+  font-style: normal;
+  text-align: center;
+  width: 100%;
+  transform: translateY(-100%);
+  z-index: 2;
+  color: white;
+  -webkit-text-stroke-width: 1.5px;
+  -webkit-text-stroke-color: white;
+  z-index: -2;
+}

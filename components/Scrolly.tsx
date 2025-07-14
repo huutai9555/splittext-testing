@@ -22,11 +22,11 @@ export default function Scrolly() {
   });
   return (
     <div className="body hidden">
-      <h1 className="text">Convallaria majalis</h1>
-      <h1 aria-hidden="true" className="text outline-text">
+      <h1 className="scrollly-text">Convallaria majalis</h1>
+      <h1 aria-hidden="true" className="scrollly-text outline-text">
         Convallaria majalis
       </h1>
-      <h1 aria-hidden="true" className="text filter-text">
+      <h1 aria-hidden="true" className="scrollly-text filter-text">
         Convallaria majalis
       </h1>
 
