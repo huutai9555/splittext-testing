@@ -7,6 +7,7 @@ import { SplitText } from "gsap/all";
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText);
 import { Great_Vibes } from "next/font/google";
 import { FaPlayCircle } from "react-icons/fa";
+import { IoArrowBackOutline } from "react-icons/io5";
 
 const greatVibes = Great_Vibes({
   subsets: ["latin"],
@@ -24,48 +25,56 @@ const albumList = [
         length: "2:11",
         src: "/pt1/1.mp3",
         artist: "Colde",
+        parentIndex: 0,
       },
       {
         title: "Love Makes Me Jealous",
         length: "2:44",
         src: "/pt1/2.mp3",
         artist: "Colde",
+        parentIndex: 0,
       },
       {
         title: "I Fxxking Love You",
         length: "4:03",
         src: "/pt1/3.mp3",
         artist: "Colde",
+        parentIndex: 0,
       },
       {
         title: "WA-R-R",
         length: "4:32",
         src: "/pt1/4.mp3",
         artist: "Colde",
+        parentIndex: 0,
       },
       {
         title: "Scent",
         length: "3:53",
         src: "/pt1/5.mp3",
         artist: "Colde",
+        parentIndex: 0,
       },
       {
         title: "You don't need my love?",
         length: "3:12",
         src: "/pt1/6.mp3",
         artist: "Colde",
+        parentIndex: 0,
       },
       {
         title: "Endless Love",
         length: "2:03",
         src: "/pt1/7.mp3",
         artist: "Colde",
+        parentIndex: 0,
       },
       {
         title: "Don't Leave Me, My Love",
         length: "4:45",
         src: "/pt1/8.mp3",
         artist: "Colde",
+        parentIndex: 0,
       },
     ],
   },
@@ -73,54 +82,63 @@ const albumList = [
     title: "Love Part 2",
     image:
       "https://images.genius.com/7a6999e118fee71481ef1f8674b36953.1000x1000x1.jpg",
+
     audioList: [
       {
         title: "Island",
         length: "4:17",
         src: "/pt2/1.mp3",
         artist: "Colde",
+        parentIndex: 1,
       },
       {
         title: "Don't ever say love me (feat. RM of BTS)",
         length: "3:34",
         src: "/pt2/2.mp3",
         artist: "Colde",
+        parentIndex: 1,
       },
       {
         title: "I'm Still Here",
         length: "3:27",
         src: "/pt2/3.mp3",
         artist: "Colde",
+        parentIndex: 1,
       },
       {
         title: "Heartbreak Club (feat. LEE CHANHYUK)",
         length: "3:38",
         src: "/pt2/4.mp3",
         artist: "Colde",
+        parentIndex: 1,
       },
       {
         title: "After Everything",
         length: "4:30",
         src: "/pt2/5.mp3",
         artist: "Colde",
+        parentIndex: 1,
       },
       {
         title: "When Dawn Comes Again (feat. BAEKHYUN)",
         length: "3:56",
         src: "/pt2/6.mp3",
         artist: "Colde",
+        parentIndex: 1,
       },
       {
         title: "Settle",
         length: "3:33",
         src: "/pt2/7.mp3",
         artist: "Colde",
+        parentIndex: 1,
       },
       {
         title: "Even Though You Said So Easily",
         length: "3:26",
         src: "/pt2/8.mp3",
         artist: "Colde",
+        parentIndex: 1,
       },
     ],
   },
@@ -130,6 +148,7 @@ export default forwardRef(function Scrolly(props, ref) {
   const { indexSrc, setIndexSrc } = props;
   const [parentIndex, setParentIndex] = React.useState(0);
   const [isPlayView, setIsPlayView] = React.useState(false);
+  const [currentAudio, setCurrentAudio] = React.useState("/pt1/1.mp3");
 
   useGSAP(() => {
     const skewSetter = gsap.quickTo(".child-images", "skewY"), // fast
@@ -147,14 +166,32 @@ export default forwardRef(function Scrolly(props, ref) {
   });
 
   useEffect(() => {
-    document.body.addEventListener("keypress", (e) => {
-      console.log(e.key);
-      if (e.key === "Escape") {
-        // write your logic here.
-        console.log("hahah");
-      }
-    });
-  }, []);
+    const audio = ref.current;
+    if (!audio) return;
+    const handleEnded = () => {
+      // Thay đổi source khi audio kết thúc
+
+      const currentIndexSrc =
+        indexSrc === albumList[parentIndex].audioList[indexSrc].length - 1
+          ? 0
+          : indexSrc + 1;
+      console.log(currentIndexSrc);
+      // console.log(albumList[parentIndex].audioList[currentIndexSrc])
+      audio.src = albumList[parentIndex].audioList[currentIndexSrc].src; // hoặc logic để chọn file khác
+      setCurrentAudio(albumList[parentIndex].audioList[currentIndexSrc].src);
+      setIndexSrc(currentIndexSrc);
+      audio.load(); // Load audio mới
+      audio.play(); // Tự động phát (tuỳ chọn)
+    };
+
+    if (audio) {
+      audio.addEventListener("ended", handleEnded);
+
+      return () => {
+        audio.removeEventListener("ended", handleEnded);
+      };
+    }
+  }, [ref]);
   return (
     <div className="body hidden">
       <h1 className="scrollly-text">Convallaria majalis</h1>
@@ -534,60 +571,106 @@ export default forwardRef(function Scrolly(props, ref) {
               </h2>
             </div>
           </div>
-          <div className="flex-1 flex flex-col overflow-y-auto pb-2">
-            <h3
-              className="py-2 cursor-pointer"
+          <div className="flex-1 flex flex-col  overflow-y-hidden pb-2">
+            <div
+              className="py-2 cursor-pointer flex gap-1 items-center"
               onClick={() => {
                 setIsPlayView(false);
               }}
             >
+              <IoArrowBackOutline />
               Watch Another Album
-            </h3>
-
-            {albumList[parentIndex].audioList.map((audio, index) => {
-              return (
-                <div
-                  key={index}
-                  className={`flex justify-between py-4 px-2 hover:bg-gray-900 group `}
-                >
-                  <div className="flex gap-4 items-center">
-                    <span className="group-hover:hidden">{index + 1}</span>
-                    <FaPlayCircle
-                      size={20}
-                      className="hidden cursor-pointer group-hover:block"
-                      onClick={() => {
-                        setIndexSrc(index);
-                        const audioInstance = ref.current;
-                        audioInstance.src = audio.src;
-                        audioInstance.load(); // Load audio mới
-                        audioInstance.play(); // Tự động phát (tuỳ chọn)
-                      }}
-                    />
-                    <div className="flex flex-col">
-                      <h3
-                        className={`${
-                          indexSrc === index ? "text-green-200" : ""
-                        }`}
-                      >
-                        {audio.title}
-                      </h3>
-                      <p
-                        className={`text-sm ${
-                          indexSrc === index ? "text-green-200" : ""
-                        }`}
-                      >
-                        {audio.artist}
-                      </p>
+            </div>
+            <div className="flex-1 overflow-y-auto">
+              {albumList[parentIndex].audioList.map((audio, index) => {
+                return (
+                  <div
+                    key={index}
+                    className={`flex justify-between py-4 px-2 hover:bg-gray-900 group `}
+                  >
+                    <div className="flex gap-4 items-center">
+                      <span className="group-hover:hidden">{index + 1}</span>
+                      <FaPlayCircle
+                        size={20}
+                        className="hidden cursor-pointer group-hover:block"
+                        onClick={() => {
+                          setIndexSrc(index);
+                          const audioInstance = ref.current;
+                          audioInstance.src = audio.src;
+                          audioInstance.load(); // Load audio mới
+                          audioInstance.play(); // Tự động phát (tuỳ chọn)
+                          setCurrentAudio(audio.src);
+                        }}
+                      />
+                      <div className="flex flex-col">
+                        <h3
+                          className={`${
+                            currentAudio === audio.src ? "text-green-200" : ""
+                          }`}
+                        >
+                          {audio.title}
+                        </h3>
+                        <p
+                          className={`text-sm ${
+                            currentAudio === audio.src ? "text-green-200" : ""
+                          }`}
+                        >
+                          {audio.artist}
+                        </p>
+                      </div>
                     </div>
+                    <span>{audio.length}</span>
                   </div>
-                  <span>{audio.length}</span>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
+            {/* <div className="flex-1 overflow-y-auto">
+              {albumList[parentIndex].audioList.map((audio, index) => {
+                return (
+                  <div
+                    key={index}
+                    className={`flex justify-between py-4 px-2 hover:bg-gray-900 group `}
+                  >
+                    <div className="flex gap-4 items-center">
+                      <span className="group-hover:hidden">{index + 1}</span>
+                      <FaPlayCircle
+                        size={20}
+                        className="hidden cursor-pointer group-hover:block"
+                        onClick={() => {
+                          setIndexSrc(index);
+                          const audioInstance = ref.current;
+                          audioInstance.src = audio.src;
+                          audioInstance.load(); // Load audio mới
+                          audioInstance.play(); // Tự động phát (tuỳ chọn)
+                          setCurrentAudio(audio.src);
+                        }}
+                      />
+                      <div className="flex flex-col">
+                        <h3
+                          className={`${
+                            currentAudio === audio.src ? "text-green-200" : ""
+                          }`}
+                        >
+                          {audio.title}
+                        </h3>
+                        <p
+                          className={`text-sm ${
+                            currentAudio === audio.src ? "text-green-200" : ""
+                          }`}
+                        >
+                          {audio.artist}
+                        </p>
+                      </div>
+                    </div>
+                    <span>{audio.length}</span>
+                  </div>
+                );
+              })}
+            </div> */}
           </div>
           <div>
             <audio id="audio" ref={ref} controls className="w-full">
-              <source src={"/pt1/1.mp3"} type="audio/mpeg" />
+              <source src={currentAudio} type="audio/mpeg" />
             </audio>
           </div>
         </div>
@@ -622,11 +705,6 @@ export default forwardRef(function Scrolly(props, ref) {
                   onClick={() => {
                     setParentIndex(index);
                     setIsPlayView(true);
-                    setIndexSrc(0);
-                    const audioInstance = ref.current;
-                    audioInstance.src = albumList[index].audioList[0].src; // Set src to the first audio of the selected album
-                    audioInstance.load(); // Load audio mới
-                    audioInstance.play(); // Tự động phát (tuỳ chọn)
                   }}
                 >
                   <img src={item.image} alt="" className="rounded" />
