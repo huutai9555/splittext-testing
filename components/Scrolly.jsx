@@ -503,12 +503,12 @@ export default forwardRef(function Scrolly(props, ref) {
             <h1
               className={`text-black text-4xl font-bold text-center text-split ${greatVibes.className}`}
             >
-              Send To My Love
+              I fucking love you
             </h1>
             <h2
               className={`text-black text-2xl font-bold text-center text-split ${greatVibes.className}`}
             >
-              Bảo Vi
+              Colde
             </h2>
             <p className="text-black sub-text opacity-0">
               세상에 많은 단어 중 woo <br /> 해주고 싶은 말이 있어 yeah <br />{" "}

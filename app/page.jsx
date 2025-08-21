@@ -102,7 +102,8 @@ export default function Page() {
           }}
         />
       </div>
-      <div className="text z-[3]">Người Nghiện Sống Tình Cảm Lắm Em À.</div>
+      {/* <div className="text z-[3]">Người Nghiện Sống Tình Cảm Lắm Em À.</div> */}
+      <div className="text z-[3]">Flower (Love Part 1 & 2).</div>
 
       <Scrolly  ref={audioRef} setIndexSrc={setIndexSrc} indexSrc={indexSrc}  />
     </>
